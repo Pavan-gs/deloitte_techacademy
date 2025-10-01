@@ -1,0 +1,311 @@
+
+OLTP --> Databases (transaction) --> row oriented file format
+OLAP --> Data warehouse (analytics) --> column oriented file format
+
+Cloud Service Providers
+=======================
+MS Azure, AWS, GCP, Oracle, Bluehost
+
+Infrastructure As A Service (IAAS) --> Servers, Virtual Machines, Virtual network
+
+Software As A Service --> Ready to use software/apps that are hosted on cloud [Gmail,CRM,ERP, Office 365]
+
+Platform As A Service --> Provides a platform to build, test and deploy apps (Azure app service, Google playstore) 
+
+Networking As A Service --> AWS direct connect, AZ networking
+
+ID As A Service --> SOS, Multi factor authentication, (AZ Active Directory[Entra ID], AWS IAM)
+
+Deployment Models
+=================
+Public cloud --> Shared by multiple Organisations 
+Private cloud --> Private to a Organisation/individual
+Hybrid cloud --> Combination of private and public cloud
+Multi-cloud --> Combination of services from different cloud providers (vm-->azure, Storage-->aws, analytics-->gcp)
+Community cloud --> Shared infrastructure with multiple organisations with similar needs
+
+Az regions --> Physical location where data centers are set-up
+Availability zones --> Physically seperate your resources within an Az region
+
+Services
+========
+
+1. Compute Services --> Virtual machines, App service, AKS, Functions
+
+2. Networking --> Vnet, Load balancer, VPN gateway, DNS
+
+3. Storage --> Blob, Files, Disk, Queue & table
+
+4. Management --> 
+
+4. Database --> SQL, Cosmos, Mysql/postgresql
+
+5. Security --> AAD (Entra ID), Key-vault, Defender
+
+6. AI & Analytics --> ML, Synapse, Cognitive servics, Vision, OpenAI, ADF
+
+7. Devops --> CI/CD pipelines, code repo, agile tools, monitor, application insights
+
+Virtual Machines
+================
+
+VM is a virtual computer with hardware/software etc.
+
+Isolation
+Internet communication
+Traffic filtering
+on-premise connectivity
+
+Availability sets --> To ensure high availability & fault tolerance
+Distribute VM's across mutliple fault domains and update domains
+
+Scale sets --> Auto scale up-down of resources
+
+Key based authentication --> Pair of cryptographic keys
+Public --> shared with server, private --> it's kept on your local laptop
+
+Authentication
+Authorization
+
+Protocol for inbound
+windows --> RDP
+Linux --> SSH
+To access from web --> http, https
+
+sudo apt update
+sudo apt install apache2 -y
+
+OSI layers
+==========
+Application layer --> Human -- computer interaction --> az portal
+Presentation layer --> Ensures that the data is in a usable format and is where the data encryption  --> ssl, tls encryption
+Session layer --> Maintains the connections and is responsible for controlling the ports and sessions --> maintaining ssh/rdp session to an azure vm
+Transport --> Transmits the data using tracsaction protocols TCP and UDP --> TCP, UDP
+Network --> Decides which physical path the data follows --> Vnet
+Data link --> Defines the format of data on the network --> Ethernet/Vlan
+Physical --> Transmits the raw bit of the data streams over physical medium --> actual servers/switches/cables
+
+Socket --> IP + Port
+HTTP --> 80
+SSH --> 22
+HTTPs --> 443
+
+Azure bastion --> Used to SSH/connect to your VM without a public IP address --> Paid service
+
+Virtual network
+===============
+
+Azure Vnet
+==========
+Acts as a Communication channel between the resources launched in the cloud, it is a representation of your own network in the cloud,
+logical isolation of azure cloud dedicated to your subscription 
+
+SDN --> Hypervisors enforce virtual isolation --> logical layer on physical h/w
+traffic is encapsulated using vxlan/vt-x
+
+Subnet --> A Sub network
+Route tables --> To control the flow of network traffic within a virtual network
+Network Security Group --> Firewall, responsible for filtering incoming, outgoing traffic from/to your VM
+Network Interface Card --> Enable communication between VM's over a network
+DNS
+End-points
+
+IP Addresses
+============
+Internet protocol --> Unique numerical address
+
+Public --> Globally unique, accessible from the internet 
+Private --> Local network, not accessible from internet
+Static IP --> Manually assigned, remains constant
+Dynamic IP --> Automatically assigned, changes periodically
+
+IPV4 (32 bit) --> 4 decimal numbers --> ranging between 0 and 255 (192.168.1.0) --> 2**32 --> 
+IPV6 (128 bit) --> 2**128
+
+-,-,-,-
+
+0-255,0-255,0-255,0-255
+
+0.0.0.0 - 255.255.255.255
+
+10.164.40.77
+
+CIDR --> Classless Inter Domain Routing
+=======================================
+192.168.0.0 to 192.168.0.255 = 256 unique addresses --> 192.168.0.0/24
+192.168.0.0, 192.168.0.1, 192.168.0.2, 192.168.0.3 ..........192.168.0.255 
+
+192.170.0.0/16 --> 192.170.0.0--192.170.255.255 --> 256*256 unique addresses --> 65,536
+192.170.0.1 -- 192.170.0.255
+192.170.1.0--> 192.170.255.255
+
+192.0.0.0/8 --> 256*256*256
+
+Lab 1
+=====
+Creating VNet
+
+1. Create a Virtual Network (ip range --> 10.0.0.0/16-->65536 ip)
+2. Let's have two subnets, 1 for Web servers (10.0.1.0/24), 
+and another one for DB servers (10.0.2.0/24)
+3. Create and configure NSG --> public nsg(public subnet) --> allow inbound(http,https,ssh), 
+private nsg(private subnet) --> allow inbound(sql, (10.0.1.0/24), ssh((10.0.1.0/24))
+
+DNS set-up
+option 1 --> under vm, networking, configdns label(pvn-demo) and then access
+http://pvn-demo.eastus.cloudapp.azure.com/
+
+option 2 --> buy a domain from registrar
+
+
+Security
+Security Center (Defender cloud) --> JIT (Just in time)
+Key vault --> Secret, Keys, Certificates management, storing secrets with Hardware Security Model (HSM) 
+Sentinel --> To detect and respond to threats
+Active directory (Entra id)
+Policy
+Dedicated Hosts --> Private servers for compliance
+
+Network Security Groups --> Firewall, filter inbound & outbound traffic
+Application Security Group --> Grouping of servers with similar ports, functions like web servers
+
+Az CLI, POWERSHELL, CLOUD SHELL
+===============================
+1. creating resource group --> az group create --name networkingdemoRG --location eastus
+2. creating vnet --> az network vnet create --resource-group networkingdemoRG 
+--name pvnvnet --address-prefixes 10.0.0.0/16 --location eastus
+3. Crating a subnet --> az network vnet subnet create --resource-group networkingdemoRG 
+--vnet-name pvnvnet --name Publicsubnet --address-prefixes 10.0.1.0/24
+4. Same commands works in Powershell(best for windows ad/admins)
+5. Cloud shell is browser based for ex, az account show, az resource list --resource-group networkingdemoRG
+
+Managed Services
+================
+Storage
+Database
+Data Warehouse
+Integration
+Streaming
+Visualisation
+AI/ML
+
+Storage
+=======
+PAAS
+Managed cloud storage service --> High availability, durable, scalable & redundant storage.
+Service to store files, messages, tables & any other types of information. 
+Also used for VM's which includes disk and files.
+
+1 subscription --> 100 accounts --> 1 account * 500 tb
+durability --> 99.9999999999 (11) with replication
+secured encryption, entra id integration, access controls
+Cost effective --> pay as you use
+
+3 categories
+============
+1. Storage for VM's (disks & files)
+2. Unstructured data (blobs, datalake stores)
+3. Structured data (Tables, SQL db, cosmos db)
+
+Types of AZ storage
+===================
+1. Blobs --> Object storage --> Huge amount of unstructured data such as text, images, videos, data for back-up, 
+archiving,disaster recovery, binary data
+2. Files --> Highly available network file sharing over SMB (Server Message Block) --> Suitable for migration of 
+the data
+3. Tables --> Store structured data (SQL, NOSQL), key-value pair, schema less design
+4. Queues --> Store & Retrieve Messages, each message of maximum size 64 kb --> Store millions of messages
+5. Disk --> For VM disks, like your server's hard drive
+
+Types of blob storages
+======================
+Block blobs --> Any text, files, videos, images etc. saved in blob storage are by default saves as block blobs (max size-->  5 pb)
+Page blobs --> Random access files upto 8 tb --> virtual hard drive --> serves as a disk for VM's
+Append blobs --> Made up of multiple block blobs, optimized for append operations --> 
+ideal for log data analysis in VM
+
+Performance / access tiers
+==========================
+Hot --> Optimized for storing data that is accessed frequently like VM, files, images, 
+videos that are in regular use storage cost (high), read cost (low)
+
+Cool --> Optimized for storing data that is infrequently accessed and stored for atleast 30 days 
+like back-up data storage cost (low), read cost (higher than hot)
+
+Cold (Archive) --> Optimized for storing data that is rarely accesses and stored for atleast 
+180 days with flexible latency storage cost (least), read cost (highest)
+
+Storage Replication
+====================
+Local Redundancy Storage --> 3 copies of data in 3 different storage boxes within same data center
+Geo RS --> 3 copies of data in primary region, 3 copies in secondary region
+Zone RS --> 3 copies of data in multiple data centers within same region
+GZRS --> Same as ZRS, single physical location in secondary region
+Read only GRS --> Same as GRS, Read only Access in secondary region
+RA-ZRS --> Same as ZRS, Read only Access in secondary region
+
+Performance
+===========
+Standard --> Backed by HDD (magnetic drives), Lowest cost per gb, best for applications that 
+requires bulk storage, infrequent data access
+
+Premium --> Backed by SSD (Solid State drives), offers low latency & consistant performance, 
+use with Azure's VM disks, best for data , i/o intensive applications --> DB
+
+General Purpose V1 --> Legacy, doesn't support any performancy tiers, standard and premium, (doesn't support ZRS, GZRS)
+General Purpose V2 --> Performance tiers, all Replications, standard and premium
+Blob storage --> Unstructured data, (append blobs, block blobs)
+
+Blob Containers & categories
+============================
+Containers --> Directory structure, can store many blobs under one container
+
+1. Creating storage account
+2. Access the account from Explorer using access keys
+3. Using SAS url for blob
+4. Generating and using SAS url for Containers
+5. Create alerts for ingress, egress in Monitor
+
+# Access policy
+
+Data lake GEN1 
+Data lake GEN2 --> Big Data
+
+ADLS2
+=====
+Combines the best features of Data lake Analytics (Hadoop compatible, Optimized drivers) 
+and Blob storage (Low cost, storage tiers, high availability)
+
+Scalable, secured & managed data lake.
+6 layers of protection for security & compliance
+
+1. Network Security --> Firewalls, Private & Service endpoints
+2. Authentication --> MFA, Service Principal, AAD
+3. Authorisation --> RBAC, ACL's, POSIX
+4. Data encryption --> SSE, CSE,  Key-vault, EKM
+5. Data Access Controls --> Lifecycle management policies, retention policies, data expiration
+6. Monitoring & auditing --> Az monitor, Log analytics
+
+Features		Blob				ADLS Gen2
+========		====				=========
+Top level Organisation	Containers			Containers
+
+Low level Organisation	Virtual directory		Directory
+
+Data containers		Blobs				Files
+
+Soft delete		Yes				Yes
+
+Static Website		Yes				No
+
+RBAC			Yes				No
+
+Access Control Lists	No				Yes
+
+SAS			Yes				Yes
+
+Access Keys		Yes				Yes
+
+
+ADLS2 is better than Blob storage in performance, security, scalability but costlier than blob storage
+It stores a new version for each file modification. Can be accessed using version history, can do retrieval or deletion.
