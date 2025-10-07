@@ -266,10 +266,26 @@ Containers --> Directory structure, can store many blobs under one container
 4. Generating and using SAS url for Containers
 5. Create alerts for ingress, egress in Monitor
 
+# Access Keys --> are given if you would like to give account level access --> High risk
+You can always rotate the keys to make older keys invalid
+by default 2 access keys are given
+
+# SAS --> Temporary, timed(validity), scoped(read only, write only, list, delete)
+
+Make storage account as public then anonymous users can access with a url
+Suppose your container is public but account is restricted to public, then can't access with url
+
 # Access policy
 
 Data lake GEN1 
 Data lake GEN2 --> Big Data
+
+Versioning
+
+To upgrade blob storage to data lake gen 2 from CLI
+admin>az storage account hns-migration start --type validation -n pvnstorage8 -g pvn-rg
+admin>az storage account hns-migration start --type upgrade -n pvnstorage8 -g pvn-rg 
+az storage account show --name pvnstorage8 --resource-group pvn-rg --query isHnsEnabled
 
 ADLS2
 =====
@@ -296,9 +312,9 @@ Data containers		Blobs				Files
 
 Soft delete		Yes				Yes
 
-Static Website		Yes				No
+Static Website		Yes				Yes
 
-RBAC			Yes				No
+RBAC			Yes				Yes
 
 Access Control Lists	No				Yes
 
@@ -309,3 +325,127 @@ Access Keys		Yes				Yes
 
 ADLS2 is better than Blob storage in performance, security, scalability but costlier than blob storage
 It stores a new version for each file modification. Can be accessed using version history, can do retrieval or deletion.
+
+RDBMS
+=====
+ACID properties
+Normalizations
+Keys
+ER-diagrams
+
+CRUD operations
+===============
+DDL
+DML
+TCL
+
+Projection of data --> SELECT
+Concatenation --> |, quote operator
+single row functions --> upper, lower, initcap, round
+multi-row functions --> group functions(avg,sum, min, max, count)
+Restricting records --> where
+groupby --> having
+joins --> inner join, outer joins, cross joins, self joins
+subqueries
+
+SELECT AVG(SALARY), DEPT
+FROM EMP
+WHERE SALARY>10000
+GROUP BY(DEPT)
+HAVING DEPT IN (60,70,80)
+
+
+Azure SQL Database 
+==================
+General purpose RDBMS as a services (DBaaS) based on the Microsoft SQL server db engine.
+
+Azure sql --> transaction based apps
+Azure db for postgreSQL --> opensource for advanced querying --> handling geographical data in mapping apps
+Azure db for mysql --> Liteweight and fast, ideal for web apps like forums, e commerce site on php
+
+Benefits
+========
+Convenient, Cost effective, Scalable, Secure, SLA (99.99% uptime)
+
+Microsoft --> hardware, Data centre, Virtualization, patching, OS, networking, Security, auditing, scaling, back-up/recovery
+You --> Design, develop, migrations, capacity planning, performance tuning, automation, optimization  
+
+V-core based purchasing model (Precise ctrl)--> choose the number of vcores, memory, speed, 
+also utilise hybrid (integrate/use your existing sql server licenses) 
+
+DTU based purchasing model --> blend of compute, memory, I/O resources in 3 service tiers to support light weight to heavy db workloads.
+Compute size s within each tier provides a different mix of these resources.
+
+Deployment models
+=================
+Single DB -- Isolated & portable , contained, own set of resources
+Elastic pool --> Collection of single db's, shared set of resources, cost effective if the usage is unpredictable
+Hyperscale --> For massive scale-up to to 100 tb, with fast back-up (every seconds)
+Managed instances --> 100% compatible with latest ms sql server, lift and shift/migration
+
+az sql server create --name ecommerceserver --resource-group --urrg --location eastus --admin-user dbadmin 
+--admin-password Strongpwd@123
+
+az sql db create --resource-group urrg --server ecommerceserver --name ecommdb --edition GeneralPurpose --family Gen5 --capacity 2 
+--compute-model Serverless
+
+
+Security
+=========
+Firewall rules
+Az AD 
+Encryption
+
+
+MS sql server --> t-sql
+Oracle --> pl/sql
+
+Big Data --> Hadoop
+
+Distributed storage
+Distributed parallel processing 
+
+1. Design a schema for a movie app using rdbms/nosql
+
+NOSQL DB's --> No fixed schema
+==========
+1. Key-value pair --> Simplest nosql type --> a unique key pointing to values
+	Simple look-ups, limited querying
+	Quick read/writes, good for chaching or sessions
+	Redis, Table API in cosmos
+
+2. Document DB's --> Data is stored as self-contained docs usually in json
+	Good for content management
+	Mongo db, couch db, Mongodb API
+
+3. Columnar DB's --> Organises data in tables with rows keys, group of columns
+	Analytics, big data
+	Cassandra, Hbase, Cassandra API
+
+4. Graph DB's --> Stores data as nodes(vertices and edges), connections
+	Neo4j, Gremlin API
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
