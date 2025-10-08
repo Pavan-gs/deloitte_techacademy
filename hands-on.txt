@@ -1,0 +1,33 @@
+Networking
+-=========-
+1. Launch win/ubuntu vm's
+2. Set up Vnet, subnets, configure NSG's
+3. Install webservers like apache2/nginx and access using IP
+
+Theory
+======
+Endpoints
+DNS
+NIC
+Internet gateway
+
+Storage
+-=====-
+Created Blob storage
+Versioning, keys, SAS
+Lifecycle management
+Creating alerts
+
+Database
+-======-
+1. Accessed az db from SSMS, queried the db
+2. Accessed postgre sql using pgadmin 
+
+Nosql
+-===-
+1. Created cosmos db using NOSQL API, added multiple containers
+and added key-value pair data, nested arrays data
+and queried them
+
+
+
