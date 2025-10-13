@@ -1,0 +1,68 @@
+-- This is auto-generated code
+SELECT
+    TOP 100 *
+FROM
+    OPENROWSET(
+        BULK 'https://pvnadls2.dfs.core.windows.net/mydir/churn.csv',
+        FORMAT = 'CSV',
+        PARSER_VERSION = '2.0',
+        HEADER_ROW = TRUE
+    ) AS [result]
+
+    SELECT TOP 100 * FROM dbo.churn
+Go
+
+--Create database
+CREATE DATABASE mydb;
+USE mydb;
+SELECT DB_NAME() AS CURRENT_DATABASE;
+
+--External data source--
+CREATE EXTERNAL DATA SOURCE mysource1
+WITH (LOCATION = 'https://pvnadls2.dfs.core.windows.net/mydir/',
+CREDENTIAL = (IDENTITY = 'Managed Identity'));
+
+--A SAS OR SERVICE PRINCIPAL IS REQUIRED TO CREATE DATA SOURCE
+--FROM A ADLS ACCOUNT WHICH IS NOT ATTACHED
+--CREDENTIAL = (IDENTITY = 'SHARED ACCESS SIGNATURE', SECRET = 'SAS TOKEN'))
+
+-- STEP 3: Create external file format (CSV)
+
+CREATE EXTERNAL FILE FORMAT CsvFileFormat
+WITH (
+    FORMAT_TYPE = DELIMITEDTEXT,
+    FORMAT_OPTIONS (
+        FIELD_TERMINATOR = ',',
+        STRING_DELIMITER = '"',
+        FIRST_ROW = 2,
+        USE_TYPE_DEFAULT = TRUE
+    )
+);
+
+-- STEP 4: Create the external table
+CREATE EXTERNAL TABLE dbo.CustomerData (
+    CustomerId        INT,
+    Surname           NVARCHAR(50),
+    CreditScore       INT,
+    Geography         NVARCHAR(50),
+    Gender            NVARCHAR(10),
+    Age               INT,
+    Tenure            INT,
+    Balance           FLOAT,
+    NumOfProducts     INT,
+    HasCrCard         BIT,
+    IsActiveMember    BIT,
+    EstimatedSalary   FLOAT,
+    Exited            BIT
+)
+WITH (
+    LOCATION = 'churn.csv',  -- Path within the container
+    DATA_SOURCE = mysource1,
+    FILE_FORMAT = CsvFileFormat,
+    --file_format = (format_type='csv',field terminator = ',',first_row=2)
+);
+
+
+SELECT * FROM dbo.CustomerData;
+SELECT * from dbo.churn
+select * from CustomerData where Surname LIKE '_A%'; 
