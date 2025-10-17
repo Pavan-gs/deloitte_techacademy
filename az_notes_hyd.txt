@@ -157,7 +157,6 @@ http://pvn-demo.eastus.cloudapp.azure.com/
 
 option 2 --> buy a domain from registrar
 
-
 Security
 Security Center (Defender cloud) --> JIT (Just in time)
 Key vault --> Secret, Keys, Certificates management, storing secrets with Hardware Security Model (HSM) 
@@ -287,6 +286,8 @@ admin>az storage account hns-migration start --type validation -n pvnstorage8 -g
 admin>az storage account hns-migration start --type upgrade -n pvnstorage8 -g pvn-rg 
 az storage account show --name pvnstorage8 --resource-group pvn-rg --query isHnsEnabled
 
+life cycle management --> set up policies to decide the movement/lifecycle of the data
+
 ADLS2
 =====
 Combines the best features of Data lake Analytics (Hadoop compatible, Optimized drivers) 
@@ -389,16 +390,15 @@ az sql server create --name ecommerceserver --resource-group --urrg --location e
 az sql db create --resource-group urrg --server ecommerceserver --name ecommdb --edition GeneralPurpose --family Gen5 --capacity 2 
 --compute-model Serverless
 
-
 Security
 =========
 Firewall rules
 Az AD 
 Encryption
 
-
 MS sql server --> t-sql
 Oracle --> pl/sql
+postgre sql --> Opensource, xml/json complex types
 
 Big Data --> Hadoop
 
@@ -425,21 +425,246 @@ NOSQL DB's --> No fixed schema
 4. Graph DB's --> Stores data as nodes(vertices and edges), connections
 	Neo4j, Gremlin API
 
+CAP theorem
+===========
+Cosmos DB --> Changing consistancy, index optimization
+
+{"id":"U1", "userid":"U1", "name":"Arun", "email":"arun@xyz.com", "signupdt":"2025-10-02"}
+{"id":"U2", "userid":"U2", "name":"Kiran","preferences":["laptop","mouse"],"signupdt":"2025-10-07"}
+
+SELECT c.name, c.preferences
+from c
+where array_contains(c.preferences, "laptop")
+
+SELECT count(1) as usercount
+from c 
+where is_defined(c.preferences) 
+
+SELECT c.name, c.signupdt
+from c
+where c.signupdt<="2025-10-05"
+
+SELECT c.name, c.signupdt
+from c
+where c.signupdt<="2025-10-05" AND array_contains(c.preferences,"mouse")
+
+Consistency
+metrics --> 99 percentile replication latency
+indexing policy
+RBAC --> Assign roles --> read/write/contributor
+Backup & restore --> periodic backup, continuous backup(point in time restore)
+Cost optimization --> manual/auto scale
+CORS --> security feature to allow webiste to talk with your apps/db
+Performance tuning --> adjust indexing policy, adjust manul/autoscale ru, use partition key
+TTL, Change feed
+
+Azure Synapse Analytics --> Attached to ADLS2 account
+=======================
+Managed Enterprise Data warehousing and big data analytics solution on cloud
+
+SQL (Synapse sql)
+Spark (processing)
+Pipelines (Integration) --> ETL, ELT (Az data factory)
+
+Supports t-sql, python, scala, .net, java, R, Spark sql, KQL
+
+Integrates well with other services such as Power BI, Cosmos DB, Azure ML etc.
+
+Synapse workspace --> Managed resource group (all the components used will be created under this)
+==================
+To build cloud based enterprise analytical solution attached with ADLS gen2 file system
+
+1. Dedicated SQL pools --> Predictable workloads
+2. Serverless sql/Spark pools --> On-demand
+
+SQL --> SQL pool --> run t-sql based script on data in linked services
+
+Linked Service --> Connection String, defines the connection information for workspace to connect to an external source
+
+Open Rowset --> Allows you to access files in Az storage and returns the content as a set of rows
+
+Synapse sql
+===========
+Ability to do the t-sql based analytics in workspace
+2 consumption models --> Serverless , Dedicated
+
+Serverless sql pool --> built in --> Use sql without reserving any capacity
+Billing is based on amount of data processed to run query.
+
+Dedicated sql pool --> Consumes billable resources if it's active, pause the pool to reduce costs and this is associated with a sql db,
+billing is based on per hour of reserved capacity --> pause the cluster
+
+Data Explorer pool --> Used to run near real time analytics on large volumes of logs and time series data streaming from applications, 
+websites, IoT devices, and more.
+
+Spark for Synapse
+==========--=----
+Ability to do spark based analytics in Synapse workspace. Spark session is created when you choose spark pool
+"POOL" is like a run time, it controls the resources used in the session.
+
+Components --> Spark notebook, job definitions
+
+Serverless Spark pool
+=====================
+External Table --> External data sources, File formats
+Views --> Virtual tables
+CETAS --> Create external table as select --> useful for exporting or transofrming data
+
+Pipelines
+=========
+To move the data between services and orchestration activities.
+Logical grouping of activities that performs a task together
+Activities defines actions within pipelines --> Copying data, running a spark notebook or a sql query
+
+Azure data factory
+==================
+Cloud based ETL for scheduling and managing workflows, orchestration and transformation of data at scale
+Integration & data transformation
+
+Linked services --> Connection strings, defines information needed for the data factory to connect with external resources
+
+Datasets --> Represents the data structures within the data stores, which simply points to reference the data you want in your activities
+
+Pipeline --> Logical grouping of activities that performs a unit of work
+
+Activity --> Processing step in a pipeline
+
+Data movement
+Data transformation
+Controlflow
+
+Triggers --> Determines when a pipeline execution needs to be kicked off. 
+
+Schedule trigger --> A trigger that involves a pipeline on a clock schedule
+Tumbling window
+Events
+
+T-sql --> Transact sql --> Microsoft --> Azure sql database --> procedural programming
+U-sql --> Big data analytics --> Az data lake analytics, az synapse --> scalable data processing
+
+Dataflow --> Data transformation activity runs on a spark cluster, that allows the developer to perform graphical data transformation(joins, data cleaning, 
+data manipulation)
+
+Software Development Life Cycle
+================================
+
+1. Waterfall --> Sequential, linear
+
+Scope of change is little
+Good for simple, cost affective, well defined, limited time period projects
+
+2. Agile
+
+Iterations, project is delivered in iterations/sprints
+Scope of change is likely
+Allows to collect the feedback often from the clients, continuous improvement
+
+Methodologies
+=============
+Scrum
+Kanban
+Lean
+
+Benefits
+========
+Improved customer satisfaction, reduced project risk
+
+Challenges
+==========
+Cultural shift, Scaling to larger teams, lack of clear requirements
 
 
+3. Devops
 
+Development + Operations
 
+Culture --> Collaboration between Development & Operations team, they work as 1 team over here.
 
+Phases --> CICD pipelines
+=========================
 
+Continous Development --> Version control --> Git, Bit bucket,sub version 
 
+Continous Testing --> Selenium/ selenium grid --> Automation testing software, Opensource web driver 
 
+Continous Integration --> Jenkins --> Opensource, 1000+ plugins
 
+Continous Deployment --> Puppet, Chef, Ansible, Saltstack
 
+Continous monitoring --> Splunk, Nagios, Grafana
 
+Build tools --> Maven, Gradle, Ant
 
+Tools
+=====
+Dockers --> Containers allows you to package your applications & its dependencies
+Dockerhub --> Cloud based containarisation platform
+Kubernetes --> Container management technology.
 
+Puppet --> Operational tool, Define configurations for each & every host, scaaling up/down is dynamic
 
+Nagios --> Continuous monitoring
 
+Azure Devops
+=============
+Boards --> Used for tracking work (kanban, scrum, agile)
+======
+Epic
+issues bugs
+features
+user story
+artifacts --> allows teams to share packages such as Maven, npm, NuGet, 
+and more from public and private sources and integrate package sharing into your pipelines
+
+Repos --> To connect with your repository/manage source code
+Pipelines --> To build CI/CD pipelines
+Test plans --> Manual & exploratory testing, test case management/tracking defects, execution
+
+Az    vs    AWS
+
+blobs        s3
+Cosmos db    Dynamo db
+Synapse      Redshift
+SQL          DBS
+ADF          Pipelines
+ML studio    Sagemaker
+PowerBi      Athena, glue
+
+git add .
+git commit -m "saved"
+git check out 
+
+Security Center (Defender cloud)
+================================
+Assess resources --> Checks VMs, dbsm containers against security benchmark
+Gives recommendations --> Suggests fixes like enable encryption, patching a software
+Detect threats --> Spots suspicious activities (malware on a vm)
+
+Alerts --> alarms that goes off when something's wrong
+
+AZ Active Directory[Entra ID] --> Authentication, Single Sign-on, Application management, B2B, B2C, Device management, 
+Multi-factor authentication, DDOS
+
+1. Identity management --> User group and device management
+2. Single Sign On (SSO) --> Access multiple applns  with one set of credentials
+3. Multi-Factor Authentication --> Enhanced Security with additional verification steps
+4. Directory integrations / conditional access
+
+Azure Advanced Threat Protection (ATP) --> Portal for threat protection, identifying if there any compromises to the 
+system
+
+Governance --> Policy, RBAC, Resource locks (Cannot delete, Read only)
+Tags --> Key-value pair
+
+Monitor --> Collect, analyse and act on telemetry data from cloud and on-premise to improve performance
+
+Health Centre --> Analyse, respond, visualise and integrate
+
+Cost Management
+Cost Analysis
+Price Calculator
+Budgets and Alerts
+Advisor
 
 
 
