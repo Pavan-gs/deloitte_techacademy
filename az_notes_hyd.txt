@@ -666,6 +666,33 @@ Price Calculator
 Budgets and Alerts
 Advisor
 
+Machine learning
+================
+Supervised learning --> Predictive models
+Unsupervised learning --> Grouping data based on similarities
+Re-inforcement learning --> Learning based on trial and error/rewards
+
+Predictive models
+=================
+
+Learning from the mathematical/statistical relationship between the y and all the vars
+
+Independent variables/features/columns --> input variables/x/predictor
+Dependent variable --> target/y/output
+
+e(y) = f(x)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
